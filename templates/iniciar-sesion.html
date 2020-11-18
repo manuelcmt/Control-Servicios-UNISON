@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de sesión</title>
+</head>
+<body>
+    <form method="post" action="">
+        {% csrf_token %}
+        <p>Número de expediente o empleado: <input type="text" name="expediente"></p>
+        <p>Contraseña: <input type="password" name="contrasena"></p>
+
+        <input type="submit" name="Iniciar Sesion" value="Login">
+    </form>
+
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+</body>
+</html>
