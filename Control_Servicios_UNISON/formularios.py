@@ -1,16 +1,24 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django import forms
 
-from Control_Servicios_UNISON.models import UsuarioBase
+from Control_Servicios_UNISON import models
+from Control_Servicios_UNISON.models import *
 
 
+# Formularios de registro
 class FormularioRegistro(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'last_name', 'first_name']
 
 
+class EleccionRol(forms.ModelForm):
+    class Meta:
+        model = UsuarioBase
+        fields = ('rol',)
+
+
+# Formularios de capacitación
 class Fsi_02(forms.Form):
     res1 = forms.BooleanField()
     res2 = forms.BooleanField()
@@ -20,7 +28,20 @@ class Fsi_02(forms.Form):
     res6 = forms.BooleanField()
 
 
-class EleccionRol(forms.ModelForm):
+# Formularios de acceso
+class SolicitarJefatura(forms.Form):
+    division = forms.ModelChoiceField(label='División', queryset=Division.objects.order_by("nombre").all())
+    nombre_depto = forms.CharField(max_length=50)
+
+
+
+class SolicitarApertura(forms.ModelForm):
     class Meta:
-        model = UsuarioBase
-        fields = ('rol',)
+        model = ResponsabilidadArea
+        fields = ('area_trabajo',)
+
+
+class SolicitarTurno(forms.ModelForm):
+    class Meta:
+        model = TurnoAsignado
+        fields = ('area_trabajo',)

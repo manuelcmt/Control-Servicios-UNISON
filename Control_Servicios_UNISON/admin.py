@@ -1,9 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from Control_Servicios_UNISON.models import UsuarioBase, Division, Departamento, AreaTrabajo, QuimicoActivo, \
-    AsignacionBrigada, ResponsabilidadArea, JefaturaDepartamento, TurnoAsignado, InspeccionSanitaria, \
-    PruebaCovidPositivo
+from Control_Servicios_UNISON.models import *
 
 admin.site.register(UsuarioBase)
 admin.site.register(Division)
@@ -18,3 +16,5 @@ admin.site.register(TurnoAsignado)
 
 admin.site.register(InspeccionSanitaria)
 admin.site.register(PruebaCovidPositivo)
+
+admin.site.register(SolicitudJefatura)

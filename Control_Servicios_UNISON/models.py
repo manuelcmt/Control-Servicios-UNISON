@@ -79,6 +79,9 @@ class TurnoAsignado(models.Model):
 class Division(models.Model):
     nombre = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.nombre
+
 
 class Departamento(models.Model):
     nombre = models.CharField(max_length=100)
@@ -109,3 +112,14 @@ class PruebaCovidPositivo(models.Model):
     paciente = models.ForeignKey(User, on_delete=models.PROTECT)
     fecha_aplicacion = models.DateTimeField(null=True)
     fecha_entrega = models.DateTimeField(null=True)
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Solicitudes de ingreso
+class SolicitudJefatura(models.Model):
+    jefe = models.ForeignKey(User, on_delete=models.CASCADE)
+    division = models.ForeignKey('Division', on_delete=models.CASCADE)
+    nombre_depto = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre_depto

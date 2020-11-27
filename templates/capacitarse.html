@@ -5,14 +5,6 @@
     <title>Capacitación para ingresar</title>
 </head>
 <body>
-    {% if rol_actual == "SIN_ELEGIR" %}
-        <form method="post" action="">
-        {% csrf_token %}
-            <p>Seleccione su tipo de usuario: {{ formulario.rol }}</p>
-            <input type="submit" name="Establecer" value="Establecer">
-        </form>
-    {% else %}
-        <a href='responder-FSI-02'>Formulario FSI-02</a>
-    {% endif %}
+    <a href='responder-FSI-02'>Formulario FSI-02</a>
 </body>
 </html>

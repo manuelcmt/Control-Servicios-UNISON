@@ -5,6 +5,24 @@
     <title>Title</title>
 </head>
 <body>
+    <table>
+        <tr>
+            <td>División</td>
+            <td>Departamento</td>
+            <td>Solicitante</td>
+            <td>Acciones</td>
+        </tr>
+        {% for solic_jefatura in solic_jefaturas %}
+            <tr>
+                <td>{{ solic_jefatura.division }}</td>
+                <td>{{ solic_jefatura.nombre_depto }}</td>
+                <td>{{ solic_jefatura.jefe }}</td>
+
+                <td><a href="{% url 'aceptar-jefatura' solic_jefatura.id %}">Aprobar</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
 
 </body>
 </html>

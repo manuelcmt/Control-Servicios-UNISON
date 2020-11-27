@@ -13,7 +13,7 @@ urlpatterns = [
 
     # Usuario que reserva turnos
     path('turno/', views.turno, name="turno"),
-    path('reservar-turno/', views.reservar_turno, name="reservar-turno"),
+    path('solicitar-acceso/', views.solicitar_acceso, name="solicitar-acceso"),
 
     # Responsable del área
     path('administrar-area/', views.administrar_area, name="administrar-area"),
@@ -27,4 +27,8 @@ urlpatterns = [
     # Comisión de seguimiento
     path('divisiones/', views.divisiones, name="divisiones"),
     path('seguimiento/', views.seguimiento, name="seguimiento"),
+
+    # Aceptar ingresos
+    path('aceptar-jefatura/<str:pk>/', views.aceptar_jefatura, name="aceptar-jefatura")
+
 ]

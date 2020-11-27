@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="post" action="">
+        {% csrf_token %}
+        {% if request.user.usuariobase.rol == 'JD' %}
+            <h2>Registro de jefe de departamento</h2>
+            <p>División: {{ formulario.division }}</p>
+            <p>Nombre de departamento: {{ formulario.nombre_depto }}</p>
+
+        {% elif request.user.usuariobase.rol == RESPONSABL %}
+
+
+        {% elif request.user.usuariobase.rol == INVESTIGAD or request.user.usuariobase.rol == ALUMNO or request.user.usuariobase.rol == EMPLEADO %}
+
+
+        {% else %}
+            <p>Seleccione su tipo de usuario: {{ formulario.rol }}</p>
+
+        {% endif %}
+
+        <input type="submit" name="Solicitar" value="Solicitar">
+    </form>
+</body>
+</html>

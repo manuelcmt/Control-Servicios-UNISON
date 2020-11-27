@@ -72,13 +72,40 @@ def turno(request):
 
 
 @usuarios_admitidos(roles_admitidos=['Capacitados'])
-def reservar_turno(request):
-    return render(request, 'reservar-turno.html')
+def solicitar_acceso(request):
+    # Jefes de departamento
+    if request.user.usuariobase.rol == 'JD':
+        formulario = SolicitarJefatura(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid():
+                nueva_jefatura = SolicitudJefatura.objects.create(jefe=request.user, division=formulario.cleaned_data['division'], nombre_depto=formulario.cleaned_data['nombre_depto'])
+                nueva_jefatura.save()
+
+    # Responsables de área
+    elif request.user.usuariobase.rol == 'RA':
+        formulario = SolicitarApertura(request.POST)
+
+    # Usuarios que piden acceso
+    elif request.user.usuariobase.rol == 'IN' or request.user.usuariobase.rol == 'AL' or request.user.usuariobase.rol == 'EM':
+        formulario = SolicitarTurno(request.POST)
+
+    # Usuario aún sin rol definido
+    else:
+        formulario = EleccionRol(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid():
+                request.user.usuariobase.rol = formulario.cleaned_data['rol']
+                request.user.usuariobase.save()
+                return render(request, 'solicitar-acceso.html', {'formulario':formulario})
+
+
+    return render(request, 'solicitar-acceso.html', {'formulario':formulario})
 
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def seguimiento(request):
-    return render(request, 'seguimiento.html')
+    context = {'solic_jefaturas': SolicitudJefatura.objects.all()}
+    return render(request, 'seguimiento.html', context)
 
 
 @usuarios_admitidos(roles_admitidos=['Entrenamiento'])
@@ -108,21 +135,32 @@ def responder_fsi_04(request):
 
 @usuarios_admitidos(roles_admitidos=['Entrenamiento'])
 def capacitarse(request):
-    formulario = EleccionRol(request.POST)
-    if request.method == 'POST':
-        if formulario.is_valid():
-            request.user.usuariobase.rol = formulario.cleaned_data['rol']
-            request.user.usuariobase.save()
-
     if request.user.usuariobase.fsi_02:
         grupo = Group.objects.get(name='Entrenamiento')
         request.user.groups.remove(grupo)
         grupo = Group.objects.get(name='Capacitados')
         request.user.groups.add(grupo)
 
-    return render(request, 'capacitarse.html', {'formulario': formulario, 'rol_actual': request.user.usuariobase.rol})
+    return render(request, 'capacitarse.html')
 
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def divisiones(request):
     return None
+
+
+@usuarios_admitidos(roles_admitidos=['Comisión'])
+def aceptar_jefatura(request, pk):
+    solicitud = SolicitudJefatura.objects.get(id=pk)
+
+    nuevo_depto = Departamento.objects.create(nombre=solicitud.nombre_depto, division=solicitud.division)
+    nuevo_depto.save()
+    nueva_jefatura = JefaturaDepartamento.objects.create(usuario=solicitud.jefe, departamento=nuevo_depto)
+    nueva_jefatura.save()
+
+    solicitud.jefe.groups.add(Group.objects.get(name='Jefes de Departamento'))
+    solicitud.jefe.groups.remove(Group.objects.get(name='Capacitados'))
+
+    solicitud.delete()
+
+    return render(request, 'aceptar-jefatura.html')
