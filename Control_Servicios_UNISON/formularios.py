@@ -18,6 +18,12 @@ class EleccionRol(forms.ModelForm):
         fields = ('rol',)
 
 
+# Formulario de registro de área para el jefe de departamento
+class RegistrarArea(forms.ModelForm):
+    class Meta:
+        model = AreaTrabajo
+        fields = ('nombre', 'direccion', 'espacio_m2',)
+
 # Formularios de capacitación
 class Fsi_02(forms.Form):
     res1 = forms.BooleanField()

@@ -87,7 +87,17 @@ def brigada(request):
 
 @usuarios_admitidos(roles_admitidos=['Jefes de Departamento'])
 def registro_departamento(request):
-    return render(request, 'registro-departamento.html')
+    formulario = RegistrarArea(request.POST)
+    departamento = request.user.jefaturadepartamento.departamento
+
+    if request.method == 'POST':
+        if formulario.is_valid():
+            nueva_area = AreaTrabajo.objects.create(nombre=formulario.cleaned_data['nombre'], departamento=departamento, direccion=formulario.cleaned_data['direccion'], espacio_m2=formulario.cleaned_data['espacio_m2'], capacidad=formulario.cleaned_data['espacio_m2']/1.8)
+            nueva_area.save()
+            return redirect('registro-departamento')
+
+    context = {'nombre_depto': departamento.nombre, 'division': departamento.division.nombre, 'areas': departamento.areatrabajo_set.all(), 'formulario': formulario}
+    return render(request, 'registro-departamento.html', context)
 
 
 @usuarios_admitidos(roles_admitidos=['Capacitados'])
@@ -104,6 +114,7 @@ def solicitar_acceso(request):
             if formulario.is_valid():
                 nueva_jefatura = SolicitudJefatura.objects.create(jefe=request.user, division=formulario.cleaned_data['division'], nombre_depto=formulario.cleaned_data['nombre_depto'])
                 nueva_jefatura.save()
+                return redirect('inicio')
 
     # Responsables de área
     elif request.user.usuariobase.rol == 'RA':
@@ -120,7 +131,7 @@ def solicitar_acceso(request):
             if formulario.is_valid():
                 request.user.usuariobase.rol = formulario.cleaned_data['rol']
                 request.user.usuariobase.save()
-                return render(request, 'solicitar-acceso.html', {'formulario':formulario})
+                return redirect('solicitar-acceso')
 
 
     return render(request, 'solicitar-acceso.html', {'formulario':formulario})
@@ -140,7 +151,7 @@ def responder_fsi_02(request):
             for respuesta in formulario:
                 if respuesta is False:
                     messages.info(request, 'Lamentablemente, no cumple con los requisitos para volver en esta etapa.')
-                    return redirect('inicio')
+                    return redirect('capacitarse')
 
             request.user.usuariobase.fsi_02 = True
             request.user.usuariobase.save()

@@ -5,7 +5,35 @@
     <title>Title</title>
 </head>
 <body>
+    <h2>División: {{ division }}<br> Departamento de {{ nombre_depto }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <h3>Registro de áreas</h3>
+        <p>Nombre: {{ formulario.nombre }}</p>
+        <p>Dirección: {{ formulario.direccion }}</p>
+        <p>Espacio (m²): {{ formulario.espacio_m2 }}</p>
 
+        <input type="submit" name="Registrar" value="Registrar">
+    </form>
 
+    <h3>Áreas registradas</h3>
+    <table>
+        <tr>
+            <td>Area</td>
+            <td>Direccion</td>
+            <td>Espacio (m²)</td>
+            <td>Capacidad</td>
+        </tr>
+
+        {% for area in areas %}
+            <tr>
+                <td>{{ area.nombre }}</td>
+                <td>{{ area.direccion }}</td>
+                <td>{{ area.espacio_m2 }}</td>
+                <td>{{ area.capacidad }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
 </body>
 </html>

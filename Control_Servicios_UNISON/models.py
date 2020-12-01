@@ -87,6 +87,9 @@ class Departamento(models.Model):
     nombre = models.CharField(max_length=100)
     division = models.ForeignKey('Division', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.division.nombre + ': ' + self.nombre
+
 
 class AreaTrabajo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -96,6 +99,9 @@ class AreaTrabajo(models.Model):
     capacidad = models.IntegerField()
     autorizada = models.BooleanField(default=False)
     ultima_rev = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return self.departamento.nombre + ' ' + self.nombre
 
 
 # ----------------------------------------------------------------------------------------------------------------------
