@@ -9,11 +9,35 @@ from .formularios import *
 
 # Create your views here.
 def inicio(request):
-    if request.user.is_authenticated is False:
-        return redirect('iniciar-sesion')
+    if request.user.is_authenticated:
+        # Todos tienen un grupo por defecto al crearse
+        grupo = request.user.groups.all()[0].name
+        if grupo == 'Entrenamiento':
+            incumbencia = 'capacitarse'
 
-    return render(request, 'inicio.html')
+        elif grupo == 'Jefes de Departamento':
+            incumbencia = 'registro-departamento'
 
+        elif grupo == 'Responsables':
+            incumbencia = 'administrar-area'
+
+        elif grupo == 'Brigada':
+            incumbencia = 'brigada'
+
+        elif grupo == 'Comisión':
+            incumbencia = 'seguimiento'
+
+        # Aquí actúa el grupo Capacitados
+        else:
+            if request.user.usuariobase.rol != 'SIN_ELEGIR':
+                incumbencia = 'turno'
+            else:
+                incumbencia = 'solicitar-acceso'
+
+    else:
+        incumbencia = 'iniciar-sesion'
+
+    return redirect(incumbencia)
 
 @para_no_autenticados
 def registrarse(request):
@@ -140,6 +164,7 @@ def capacitarse(request):
         request.user.groups.remove(grupo)
         grupo = Group.objects.get(name='Capacitados')
         request.user.groups.add(grupo)
+        return redirect('inicio')
 
     return render(request, 'capacitarse.html')
 
