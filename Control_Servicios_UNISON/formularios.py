@@ -11,7 +11,7 @@ class FormularioRegistro(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'last_name', 'first_name']
 
-
+# EleccionRol
 class EleccionRol(forms.ModelForm):
     class Meta:
         model = UsuarioBase
