@@ -5,7 +5,44 @@
     <title>Title</title>
 </head>
 <body>
+    <table>
+        <h2>Solicitudes de acceso a tu área</h2>
+        <tr>
+            <td>Número de empleado/expediente</td>
+            <td>Nombre</td>
+            <td>Apellido</td>
+            <td>Acciones</td>
+        </tr>
+        {% for solicitud in solicitudes %}
+            <tr>
+                <td>{{ solicitud.usuario.username }}</td>
+                <td>{{ solicitud.usuario.first_name }}</td>
+                <td>{{ solicitud.usuario.last_name }}</td>
 
+                <td><a href="{% url 'aceptar-turno' solicitud.id %}">Aprobar</a></td>
+            </tr>
+        {% endfor %}
 
+    </table>
+
+    <table>
+        <h2>Tus compañeros</h2>
+        <tr>
+            <td>Número de empleado/expediente</td>
+            <td>Nombre</td>
+            <td>Apellido</td>
+            <td>Acciones</td>
+        </tr>
+        {% for turno in turnos %}
+            <tr>
+                <td>{{ turno.usuario.username }}</td>
+                <td>{{ turno.usuario.first_name }}</td>
+                <td>{{ turno.usuario.last_name }}</td>
+
+                <td><a href="{% url 'aceptar-turno' turno.id %}">Eliminar</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
 </body>
 </html>

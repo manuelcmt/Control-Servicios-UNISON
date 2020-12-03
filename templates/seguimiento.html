@@ -6,6 +6,7 @@
 </head>
 <body>
     <table>
+        <h2>Solicitudes de apertura de departamentos</h2>
         <tr>
             <td>División</td>
             <td>Departamento</td>
@@ -22,6 +23,27 @@
             </tr>
         {% endfor %}
 
+    </table>
+
+    <table>
+        <h2>Solicitudes de apertura de áreas de trabajo</h2>
+        <tr>
+            <td>División</td>
+            <td>Área</td>
+            <td>Dirección</td>
+            <td>Solicitante</td>
+            <td>Acciones</td>
+        </tr>
+        {% for solic_apertura in solic_aperturas %}
+            <tr>
+                <td>{{ solic_apertura.area_solici.departamento.division }}</td>
+                <td>{{ solic_apertura.area_solici }}</td>
+                <td>{{ solic_apertura.area_solici.direccion }}</td>
+                <td>{{ solic_apertura.responsable }}</td>
+
+                <td><a href="{% url 'aceptar-apertura' solic_apertura.id %}">Aprobar</a></td>
+            </tr>
+        {% endfor %}
     </table>
 
 </body>

@@ -40,6 +40,10 @@ class UsuarioBase(models.Model):
     capacitacion = models.BooleanField()
 
 
+    def __str__(self):
+        return self.usuario.username
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Elementos específicos de cada rol:
 # Una vez autorizado, el usuario estándar se expande con información específica con la que trabajará.
@@ -97,6 +101,8 @@ class AreaTrabajo(models.Model):
     direccion = models.CharField(max_length=500)  # Cambiar por maps: https://pypi.org/project/django-google-maps/
     espacio_m2 = models.IntegerField()
     capacidad = models.IntegerField()
+    usuarios = models.IntegerField(default=0)
+    disponibles = models.BooleanField(default=True)
     autorizada = models.BooleanField(default=False)
     ultima_rev = models.DateTimeField(null=True)
 
@@ -129,3 +135,12 @@ class SolicitudJefatura(models.Model):
 
     def __str__(self):
         return self.nombre_depto
+
+class SolicitudApertura(models.Model):
+    responsable = models.ForeignKey(User, on_delete=models.CASCADE)
+    area_solici = models.ForeignKey(AreaTrabajo, on_delete=models.CASCADE)
+
+
+class SolicitudTurno(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    area_solici = models.ForeignKey(AreaTrabajo, on_delete=models.CASCADE)

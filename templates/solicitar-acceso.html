@@ -12,10 +12,13 @@
             <p>División: {{ formulario.division }}</p>
             <p>Nombre de departamento: {{ formulario.nombre_depto }}</p>
 
-        {% elif request.user.usuariobase.rol == RESPONSABL %}
+        {% elif request.user.usuariobase.rol == 'RA' %}
+            <h2>Solicitud de apertura de área</h2>
+            <p>Area solicitada: {{ formulario.area_solici }}</p>
 
-
-        {% elif request.user.usuariobase.rol == INVESTIGAD or request.user.usuariobase.rol == ALUMNO or request.user.usuariobase.rol == EMPLEADO %}
+        {% elif request.user.usuariobase.rol == 'IN' or request.user.usuariobase.rol == 'AL' or request.user.usuariobase.rol == 'EM' %}
+            <h2>Solicitud de acceso a un área</h2>
+            <p>Area solicitada: {{ formulario.area_solici }}</p>
 
 
         {% else %}

@@ -18,3 +18,5 @@ admin.site.register(InspeccionSanitaria)
 admin.site.register(PruebaCovidPositivo)
 
 admin.site.register(SolicitudJefatura)
+admin.site.register(SolicitudApertura)
+admin.site.register(SolicitudTurno)

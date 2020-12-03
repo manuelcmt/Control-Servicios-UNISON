@@ -41,13 +41,9 @@ class SolicitarJefatura(forms.Form):
 
 
 
-class SolicitarApertura(forms.ModelForm):
-    class Meta:
-        model = ResponsabilidadArea
-        fields = ('area_trabajo',)
+class SolicitarApertura(forms.Form):
+    area_solici = forms.ModelChoiceField(label='Área', queryset=AreaTrabajo.objects.order_by("nombre").exclude(autorizada=True))
 
 
-class SolicitarTurno(forms.ModelForm):
-    class Meta:
-        model = TurnoAsignado
-        fields = ('area_trabajo',)
+class SolicitarTurno(forms.Form):
+    area_solici = forms.ModelChoiceField(label="Área", queryset=AreaTrabajo.objects.order_by("nombre").exclude(autorizada=False).exclude(disponibles=False))

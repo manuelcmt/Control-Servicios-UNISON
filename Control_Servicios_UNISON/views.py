@@ -77,7 +77,9 @@ def cerrar_sesion(request):
 
 @usuarios_admitidos(roles_admitidos=['Responsables'])
 def administrar_area(request):
-    return render(request, 'administrar-area.html')
+    context = {'solicitudes': SolicitudTurno.objects.filter(area_solici=request.user.responsabilidadarea.area_trabajo),
+               'turnos': request.user.responsabilidadarea.area_trabajo.turnoasignado_set.all()}
+    return render(request, 'administrar-area.html', context)
 
 
 @usuarios_admitidos(roles_admitidos=['Brigada'])
@@ -119,10 +121,20 @@ def solicitar_acceso(request):
     # Responsables de área
     elif request.user.usuariobase.rol == 'RA':
         formulario = SolicitarApertura(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid():
+                nueva_responsabilidad = SolicitudApertura.objects.create(responsable=request.user, area_solici=formulario.cleaned_data['area_solici'])
+                nueva_responsabilidad.save()
+                return redirect('inicio')
 
     # Usuarios que piden acceso
     elif request.user.usuariobase.rol == 'IN' or request.user.usuariobase.rol == 'AL' or request.user.usuariobase.rol == 'EM':
         formulario = SolicitarTurno(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid():
+                nuevo_turno = SolicitudTurno.objects.create(usuario=request.user, area_solici=formulario.cleaned_data['area_solici'])
+                nuevo_turno.save()
+                return redirect('inicio')
 
     # Usuario aún sin rol definido
     else:
@@ -139,7 +151,7 @@ def solicitar_acceso(request):
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def seguimiento(request):
-    context = {'solic_jefaturas': SolicitudJefatura.objects.all()}
+    context = {'solic_jefaturas': SolicitudJefatura.objects.all(), 'solic_aperturas': SolicitudApertura.objects.all()}
     return render(request, 'seguimiento.html', context)
 
 
@@ -200,3 +212,37 @@ def aceptar_jefatura(request, pk):
     solicitud.delete()
 
     return render(request, 'aceptar-jefatura.html')
+
+
+def aceptar_apertura(request, pk):
+    solicitud = SolicitudApertura.objects.get(id=pk)
+
+    nueva_responsabilidad = ResponsabilidadArea.objects.create(usuario=solicitud.responsable, area_trabajo=solicitud.area_solici)
+    nueva_responsabilidad.save()
+
+    solicitud.responsable.groups.add(Group.objects.get(name='Responsables'))
+    solicitud.responsable.groups.remove(Group.objects.get(name="Capacitados"))
+    solicitud.area_solici.autorizada = True
+    solicitud.area_solici.usuarios += 1
+    if solicitud.area_solici.usuarios == solicitud.area_solici.capacidad:
+        solicitud.area_solici.disponibles = False
+
+    solicitud.area_solici.save()
+    solicitud.delete()
+
+    return redirect(seguimiento)
+
+def aceptar_turno(request, pk):
+    solicitud = SolicitudTurno.objects.get(id=pk)
+
+    nuevo_turno = TurnoAsignado.objects.create(usuario=solicitud.usuario, area_trabajo=solicitud.area_solici)
+    nuevo_turno.save()
+
+    solicitud.area_solici.usuarios += 1
+    if solicitud.area_solici.usuarios >= solicitud.area_solici.capacidad:
+        solicitud.area_solici.disponibles = False
+
+    solicitud.area_solici.save()
+    solicitud.delete()
+
+    return redirect(administrar_area)
