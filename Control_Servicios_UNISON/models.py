@@ -68,7 +68,7 @@ class ResponsabilidadArea(models.Model):
     area_trabajo = models.ForeignKey('AreaTrabajo', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.area_trabajo
+        return self.area_trabajo.nombre
 
 
 # Vinculación con un departamento específico
@@ -77,7 +77,7 @@ class JefaturaDepartamento(models.Model):
     departamento = models.ForeignKey('Departamento', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.departamento
+        return self.departamento.nombre
 
 
 # Información sobre el turno actual
@@ -87,7 +87,7 @@ class TurnoAsignado(models.Model):
     # horario
 
     def __str__(self):
-        return self.usuario
+        return self.usuario.username
 
 
 # ----------------------------------------------------------------------------------------------------------------------
