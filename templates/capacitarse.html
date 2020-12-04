@@ -5,12 +5,13 @@
     <title>Capacitación para ingresar</title>
 </head>
 <body>
-    {% if not request.user.fsi_02 %}
-    <a href='responder-FSI-02'>Formulario FSI-02</a>
+    <h2>Tus capacitaciones pendientes</h2>
+    {% if fsi_02 == False %}
+        <p><a href='responder-FSI-02'>Formulario FSI-02</a></p>
     {% endif %}
 
-    {% if not request.user.fsi_04 %}
-    <a href='responder-FSI-04'>Formulario FSI-04</a>
+    {% if fsi_04 == False %}
+        <p><a href='responder-FSI-04'>Formulario FSI-04</a></p>
     {% endif %}
 </body>
 </html>

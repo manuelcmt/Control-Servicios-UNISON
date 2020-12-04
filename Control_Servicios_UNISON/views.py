@@ -109,17 +109,17 @@ def inspeccion_sanitaria(request, pk):
     if request.method == 'POST':
         if formulario.is_valid():
             puntos_riesgo = 0
-            if not formulario.cleaned_data['limite_usuarios']:
+            if formulario.cleaned_data['limite_usuarios'] == 'False':
                 puntos_riesgo += 1
-            if not formulario.cleaned_data['higiene']:
+            if not formulario.cleaned_data['higiene'] == 'False':
                 puntos_riesgo += 1
-            if not formulario.cleaned_data['gel_antibacterial']:
+            if not formulario.cleaned_data['gel_antibacterial'] == 'False':
                 puntos_riesgo += 1
-            if not formulario.cleaned_data['sanitizante']:
+            if not formulario.cleaned_data['sanitizante'] == 'False':
                 puntos_riesgo += 1
-            if not formulario.cleaned_data['tapete']:
+            if not formulario.cleaned_data['tapete'] == 'False':
                 puntos_riesgo += 1
-            if not formulario.cleaned_data['cubrebocas']:
+            if not formulario.cleaned_data['cubrebocas'] == 'False':
                 puntos_riesgo += 1
 
             if puntos_riesgo != 0 or formulario.cleaned_data['comentarios'] != '':
@@ -243,7 +243,7 @@ def responder_fsi_02(request):
     if request.method == 'POST':
         if formulario.is_valid():
             for respuesta in formulario:
-                if respuesta is False:
+                if respuesta.value() == 'False':
                     messages.info(request, 'Lamentablemente, no cumple con los requisitos para volver en esta etapa.')
                     return redirect('capacitarse')
 
@@ -260,12 +260,13 @@ def responder_fsi_02(request):
 @usuarios_admitidos(roles_admitidos=['Entrenamiento'])
 def responder_fsi_04(request):
     formulario = Fsi_04(request.POST)
-    puntaje = 0
     if request.method == 'POST':
         if formulario.is_valid():
+            puntaje = 0
             for respuesta in formulario:
-                puntaje += respuesta
+                puntaje += int(respuesta.value())
 
+            print(puntaje)
             if puntaje >= 80:
                 request.user.usuariobase.fsi_04 = True
                 request.user.usuariobase.save()
@@ -275,6 +276,7 @@ def responder_fsi_04(request):
                 messages.info(request, 'Lamentablemente, no cumple con los requisitos para volver en esta etapa.')
 
             return redirect('capacitarse')
+
 
     context = {'formulario': formulario}
     return render(request, 'responder-FSI-04.html', context)
@@ -289,7 +291,7 @@ def capacitarse(request):
         request.user.groups.add(grupo)
         return redirect('inicio')
 
-    return render(request, 'capacitarse.html')
+    return render(request, 'capacitarse.html', {'fsi_02': request.user.usuariobase.fsi_02, 'fsi_04': request.user.usuariobase.fsi_04 })
 
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
