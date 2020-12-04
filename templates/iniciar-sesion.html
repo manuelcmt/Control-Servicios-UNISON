@@ -13,6 +13,8 @@
         <input type="submit" name="Iniciar Sesion" value="Login">
     </form>
 
+    <p>¿No tienes cuenta? <a href="{% url 'registrarse' %}">Regístrate</a></p>
+
     {% for message in messages %}
         <p>{{ message }}</p>
     {% endfor %}

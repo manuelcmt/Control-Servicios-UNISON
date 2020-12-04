@@ -5,6 +5,18 @@
     <title>Title</title>
 </head>
 <body>
+    <h2>Asignación</h2>
+    <p>Número de empleado/expediente: {{ request.user.username }}</p>
+    <p>Nombre: {{ request.user.first_name }} {{ request.user.last_name }}</p>
 
+    {% if request.user.usuariobase.rol == 'IN' or request.user.usuariobase.rol == 'AL' or request.user.usuariobase.rol == 'EM' %}
+        {% if request.user.turnoasignado.exists %}
+            <p>Tienes acceso al área: {{ request.user.turnoasignado.area_trabajo }}</p>
+        {% else %}
+            <p>Tu solicitud de acceso está pendiente.</p>
+        {% endif %}
+    {% else %}
+        <p>Tu solicitud de acceso está pendiente.</p>
+    {% endif %}
 </body>
 </html>

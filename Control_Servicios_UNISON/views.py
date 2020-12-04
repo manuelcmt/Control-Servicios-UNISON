@@ -45,9 +45,9 @@ def inicio(request):
 @para_no_autenticados
 def registrarse(request):
     formulario = FormularioRegistro(request.POST)
-    messages.success(request, 'Su cuenta se ha creado, complete los cursos y elija un rol.')
     if formulario.is_valid():
         formulario.save()
+        messages.success(request, 'Su cuenta se ha creado, complete los cursos y elija un rol.')
 
         return redirect('iniciar-sesion')
 
@@ -153,7 +153,6 @@ def registro_departamento(request):
 
     if request.method == 'POST':
         if formulario.is_valid():
-            capacidad = 0
             if formulario.cleaned_data['espacio_m2'] < 9:
                 capacidad = 1
             else:
@@ -289,7 +288,7 @@ def capacitarse(request):
         request.user.groups.remove(grupo)
         grupo = Group.objects.get(name='Capacitados')
         request.user.groups.add(grupo)
-        return redirect('inicio')
+        return redirect('solicitar-acceso')
 
     return render(request, 'capacitarse.html', {'fsi_02': request.user.usuariobase.fsi_02, 'fsi_04': request.user.usuariobase.fsi_04 })
 

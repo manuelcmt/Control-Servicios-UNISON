@@ -25,11 +25,11 @@ class RegistrarArea(forms.ModelForm):
 
 # Formularios de capacitación
 class Fsi_02(forms.Form):
-    res1 = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
-    res2 = forms.ChoiceField(choices=((True, "Sí"), (False, "No"), (False, "No aplica")), widget=forms.RadioSelect)
-    res3 = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
-    res4 = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
-    res5 = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
+    res1 = forms.ChoiceField(choices=((False, "Sí"), (True, "No")), widget=forms.RadioSelect)
+    res2 = forms.ChoiceField(choices=((False, "Sí"), (True, "No"), (True, "No aplica")), widget=forms.RadioSelect)
+    res3 = forms.ChoiceField(choices=((False, "Sí"), (True, "No")), widget=forms.RadioSelect)
+    res4 = forms.ChoiceField(choices=((False, "Sí"), (True, "No")), widget=forms.RadioSelect)
+    res5 = forms.ChoiceField(choices=((False, "Sí"), (True, "No")), widget=forms.RadioSelect)
     res6 = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
 
 
