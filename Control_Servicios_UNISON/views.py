@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
@@ -85,7 +87,62 @@ def administrar_area(request):
 
 @usuarios_admitidos(roles_admitidos=['Brigada'])
 def brigada(request):
-    return render(request, 'brigada.html')
+    division = request.user.asignacionbrigada.division
+    areas = []
+
+    for departamento in division.departamento_set.all():
+        for area in departamento.areatrabajo_set.all():
+            if area.autorizada:
+                areas.append(area)
+
+
+    context = {'division': division, 'areas': areas}
+    return render(request, 'brigada.html', context)
+
+
+@usuarios_admitidos(roles_admitidos=['Brigada'])
+def inspeccion_sanitaria(request, pk):
+    formulario = ReportarArea(request.POST)
+    inspector = request.user
+    area = AreaTrabajo.objects.get(id=pk)
+
+    if request.method == 'POST':
+        if formulario.is_valid():
+            riesgo = 0
+            if  not formulario.cleaned_data['limite_usuarios']:
+                riesgo += 1
+            if not formulario.cleaned_data['higiene']:
+                riesgo += 1
+            if not formulario.cleaned_data['gel_antibacterial']:
+                riesgo += 1
+            if not formulario.cleaned_data['sanitizante']:
+                riesgo += 1
+            if not formulario.cleaned_data['tapete']:
+                riesgo += 1
+            if not formulario.cleaned_data['cubrebocas']:
+                riesgo += 1
+
+            if riesgo != 0 or formulario.cleaned_data['comentarios'] != '':
+                inspeccion = InspeccionSanitaria.objects.create(limite_usuarios=formulario.cleaned_data['limite_usuarios'],
+                                                   higiene=formulario.cleaned_data['higiene'],
+                                                   gel_antibacterial=formulario.cleaned_data['gel_antibacterial'],
+                                                   sanitizante=formulario.cleaned_data['sanitizante'],
+                                                   tapete=formulario.cleaned_data['tapete'],
+                                                   cubrebocas=formulario.cleaned_data['cubrebocas'],
+                                                   comentarios=formulario.cleaned_data['comentarios'],
+                                                   brigadista=inspector,
+                                                   area_revisada=area,
+                                                   fecha=datetime.now(),
+                                                   riesgo=riesgo
+                                                   )
+
+                inspeccion.save()
+            area.ultima_rev = datetime.now()
+            area.save()
+            return redirect(brigada)
+
+    context = {'formulario': formulario, 'area': area}
+    return render(request, 'inspeccion-sanitaria.html', context)
 
 
 @usuarios_admitidos(roles_admitidos=['Jefes de Departamento'])
@@ -160,6 +217,7 @@ def seguimiento(request):
     context = {'divisiones': Division.objects.all(),
                'solic_jefaturas': SolicitudJefatura.objects.all(),
                'solic_aperturas': SolicitudApertura.objects.all(),
+               'inspecciones': InspeccionSanitaria.objects.all(),
                }
     return render(request, 'seguimiento.html', context)
 
@@ -243,12 +301,29 @@ def aceptar_apertura(request, pk):
     solicitud.responsable.groups.add(Group.objects.get(name='Responsables'))
     solicitud.responsable.groups.remove(Group.objects.get(name="Capacitados"))
     solicitud.area_solici.autorizada = True
-    solicitud.area_solici.usuarios += 1
-    if solicitud.area_solici.usuarios == solicitud.area_solici.capacidad:
+    if solicitud.area_solici.capacidad == 1:
         solicitud.area_solici.disponibles = False
 
+    solicitud.area_solici.ultima_rev = datetime.now()
     solicitud.area_solici.save()
     solicitud.delete()
+
+    return redirect(seguimiento)
+
+
+@usuarios_admitidos(roles_admitidos=['Comisión'])
+def clausurar_area(request, pk):
+    area = AreaTrabajo.objects.get(id=pk)
+
+    for turno in area.turnoasignado_set.all():
+        turno.delete()
+
+    area.responsabilidadarea_set.all()[0].usuario.groups.remove(Group.objects.get(name='Responsables'))
+    area.responsabilidadarea_set.all()[0].usuario.groups.add(Group.objects.get(name='Capacitados'))
+    area.responsabilidadarea_set.all()[0].delete()
+    area.autorizada = False
+    area.disponibles = True
+    area.save()
 
     return redirect(seguimiento)
 
@@ -260,8 +335,7 @@ def aceptar_turno(request, pk):
     nuevo_turno = TurnoAsignado.objects.create(usuario=solicitud.usuario, area_trabajo=solicitud.area_solici)
     nuevo_turno.save()
 
-    solicitud.area_solici.usuarios += 1
-    if solicitud.area_solici.usuarios >= solicitud.area_solici.capacidad:
+    if solicitud.area_solici.turnoasignado_set.count() + 1 >= solicitud.area_solici.capacidad:
         solicitud.area_solici.disponibles = False
 
     solicitud.area_solici.save()
@@ -291,7 +365,6 @@ def asignar_brigadista(request, usuario, division):
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def desasignar_brigadista(request, usuario, division):
-    print(usuario)
     brigadista = User.objects.get(id=usuario)
     asignacion = AsignacionBrigada.objects.get(usuario=brigadista)
     asignacion.delete()

@@ -113,7 +113,6 @@ class AreaTrabajo(models.Model):
     direccion = models.CharField(max_length=500)  # Cambiar por maps: https://pypi.org/project/django-google-maps/
     espacio_m2 = models.IntegerField()
     capacidad = models.IntegerField()
-    usuarios = models.IntegerField(default=0)
     disponibles = models.BooleanField(default=True)
     autorizada = models.BooleanField(default=False)
     ultima_rev = models.DateTimeField(null=True)
@@ -122,13 +121,32 @@ class AreaTrabajo(models.Model):
         return self.departamento.nombre + ' ' + self.nombre
 
 
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Reportes de control
 class InspeccionSanitaria(models.Model):
-    brigadista = models.ForeignKey('AsignacionBrigada', on_delete=models.CASCADE)
+    brigadista = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     area_revisada = models.ForeignKey('AreaTrabajo', on_delete=models.CASCADE)
     fecha = models.DateTimeField(null=True)
     riesgo = models.IntegerField()  # Determina la prioridad para la comisión. Entre menos, mejor.
+
+    # No se sobrepasa el límite de usuarios indicado para el área en cuestión
+    limite_usuarios = models.BooleanField(default=True)
+    # El lugar presenta, en general una buena higiene
+    higiene = models.BooleanField(default=True)
+    # Hay gel antibacterial disponible
+    gel_antibacterial = models.BooleanField(default=True)
+    # Hay sanitizante para superficies y otros objetos
+    sanitizante = models.BooleanField(default=True)
+    # Hay tapete desinfectante en la entrada
+    tapete = models.BooleanField(default=True)
+    # Todos los presentes tienen cubrebocas
+    cubrebocas = models.BooleanField(default=True)
+
+    comentarios = models.TextField(null=True)
+
+    def __str__(self):
+        return str(self.area_revisada) + ' en ' + str(self.fecha)
 
 
 class PruebaCovidPositivo(models.Model):

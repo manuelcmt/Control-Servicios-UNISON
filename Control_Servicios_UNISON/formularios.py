@@ -1,7 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from Control_Servicios_UNISON import models
 from Control_Servicios_UNISON.models import *
 
 
@@ -47,3 +46,22 @@ class SolicitarApertura(forms.Form):
 
 class SolicitarTurno(forms.Form):
     area_solici = forms.ModelChoiceField(label="Área", queryset=AreaTrabajo.objects.order_by("nombre").exclude(autorizada=False).exclude(disponibles=False))
+
+
+class ReportarArea(forms.Form):
+    # Indicadores de salubridad
+    # No se sobrepasa el límite de usuarios indicado para el área en cuestión
+    limite_usuarios = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
+    # El lugar presenta, en general una buena higiene
+    higiene = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
+    # Hay gel antibacterial disponible
+    gel_antibacterial = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
+    # Hay sanitizante para superficies y otros objetos
+    sanitizante = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
+    # Hay tapete desinfectante en la entrada
+    tapete = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
+    # Todos los presentes tienen cubrebocas
+    cubrebocas = forms.ChoiceField(choices=((True, "Sí"), (False, "No")), widget=forms.RadioSelect)
+
+    # Cualquier observación personalizada del brigadista
+    comentarios = forms.CharField(widget=forms.Textarea, required=False)

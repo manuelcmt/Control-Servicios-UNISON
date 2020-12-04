@@ -52,5 +52,29 @@
         {% endfor %}
     </table>
 
+    <table>
+        <h2>Reportes de salubridad</h2>
+        <tr>
+            <td>Area</td>
+            <td>Inspector</td>
+            <td>Puntos de riesgo</td>
+            <td>Comentarios</td>
+            <td>Acciones</td>
+        </tr>
+        {% for inspeccion in inspecciones %}
+            <tr>
+                <td>{{ inspeccion.area_revisada }}</td>
+                <td>{{ inspeccion.brigadista.username }}</td>
+                <td>{{ inspeccion.riesgo }}</td>
+                <td>{{ inspeccion.comentarios }}</td>
+                {% if inspeccion.area_revisada.autorizada %}
+                <td><a href="{% url 'clausurar-area' inspeccion.area_revisada.id %}">Clausurar</a></td>
+                {% endif %}
+            </tr>
+
+        {% endfor %}
+
+    </table>
+
 </body>
 </html>

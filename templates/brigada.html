@@ -5,7 +5,27 @@
     <title>Title</title>
 </head>
 <body>
+    <h2>Inspección de salubridad, {{ division }}</h2>
 
+    <h3>Áreas para revisión:</h3>
+    <table>
+        <tr>
+            <td>Área</td>
+            <td>Dirección</td>
+            <td>Última revisión</td>
+            <td>Acciones</td>
+        </tr>
+        {% for area in areas %}
+            <tr>
+            <td>{{ area }}</td>
+            <td>{{ area.direccion }}</td>
+            <td>{{ area.ultima_rev }}</td>
+
+            <td><a href="{% url 'inspeccion-sanitaria' area.id %}">Registrar visita</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
 
 </body>
 </html>

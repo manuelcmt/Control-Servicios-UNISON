@@ -20,6 +20,7 @@ urlpatterns = [
 
     # Brigadistas
     path('brigada/', views.brigada, name="brigada"),
+    path('inspeccion-sanitaria/<str:pk>', views.inspeccion_sanitaria, name="inspeccion-sanitaria"),
 
     # Jefes de departamento
     path('registro-departamento/', views.registro_departamento, name="registro-departamento"),
@@ -31,6 +32,7 @@ urlpatterns = [
     # Aceptar ingresos
     path('aceptar-jefatura/<str:pk>/', views.aceptar_jefatura, name="aceptar-jefatura"),
     path('aceptar-apertura/<str:pk>', views.aceptar_apertura, name="aceptar-apertura"),
+    path('clausurar-area/<str:pk>', views.clausurar_area, name="clausurar-area"),
     path('aceptar-turno/<str:pk>', views.aceptar_turno, name="aceptar-turno"),
     path('revocar-turno/<str:pk>', views.revocar_turno, name="revocar-turno"),
     path('asignar-brigadista/<str:usuario><str:division>', views.asignar_brigadista, name="asignar-brigadista"),
