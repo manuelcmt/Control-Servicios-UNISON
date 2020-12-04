@@ -32,6 +32,7 @@ urlpatterns = [
     path('aceptar-jefatura/<str:pk>/', views.aceptar_jefatura, name="aceptar-jefatura"),
     path('aceptar-apertura/<str:pk>', views.aceptar_apertura, name="aceptar-apertura"),
     path('aceptar-turno/<str:pk>', views.aceptar_turno, name="aceptar-turno"),
+    path('revocar-turno/<str:pk>', views.revocar_turno, name="revocar-turno"),
     path('asignar-brigadista/<str:usuario><str:division>', views.asignar_brigadista, name="asignar-brigadista"),
     path('desasignar-brigadista/<str:usuario><str:division>', views.desasignar_brigadista, name="desasignar-brigadista"),
 

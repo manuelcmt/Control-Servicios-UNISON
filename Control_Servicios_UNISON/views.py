@@ -78,7 +78,8 @@ def cerrar_sesion(request):
 @usuarios_admitidos(roles_admitidos=['Responsables'])
 def administrar_area(request):
     context = {'solicitudes': SolicitudTurno.objects.filter(area_solici=request.user.responsabilidadarea.area_trabajo),
-               'turnos': request.user.responsabilidadarea.area_trabajo.turnoasignado_set.all()}
+               'turnos': request.user.responsabilidadarea.area_trabajo.turnoasignado_set.all(),
+               'area': request.user.responsabilidadarea.area_trabajo}
     return render(request, 'administrar-area.html', context)
 
 
@@ -252,7 +253,7 @@ def aceptar_apertura(request, pk):
     return redirect(seguimiento)
 
 
-@usuarios_admitidos(roles_admitidos=['Comisión'])
+@usuarios_admitidos(roles_admitidos=['Responsables'])
 def aceptar_turno(request, pk):
     solicitud = SolicitudTurno.objects.get(id=pk)
 
@@ -268,6 +269,13 @@ def aceptar_turno(request, pk):
 
     return redirect(administrar_area)
 
+
+@usuarios_admitidos(roles_admitidos=['Responsables'])
+def revocar_turno(request, pk):
+    turno = TurnoAsignado.objects.get(id=pk)
+    turno.delete()
+
+    return redirect(administrar_area)
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def asignar_brigadista(request, usuario, division):

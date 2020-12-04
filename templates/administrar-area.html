@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
+    <h2>Área: {{ area }}</h2>
+    <p>Máximo de ocupantes: {{ area.capacidad }}</p>
+    <p>Ocupantes actuales: {{ area.turnoasignado_set.count }}</p>
     <table>
         <h2>Solicitudes de acceso a tu área</h2>
         <tr>
@@ -39,7 +42,7 @@
                 <td>{{ turno.usuario.first_name }}</td>
                 <td>{{ turno.usuario.last_name }}</td>
 
-                <td><a href="{% url 'aceptar-turno' turno.id %}">Eliminar</a></td>
+                <td><a href="{% url 'revocar-turno' turno.id %}">Eliminar</a></td>
             </tr>
         {% endfor %}
 
