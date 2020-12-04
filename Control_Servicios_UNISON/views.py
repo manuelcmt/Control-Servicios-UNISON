@@ -136,6 +136,11 @@ def solicitar_acceso(request):
                 nuevo_turno.save()
                 return redirect('inicio')
 
+
+    # Brigadistas (no requieren solicitud)
+    elif request.user.usuariobase.rol == 'BR':
+        return redirect('inicio')
+
     # Usuario aún sin rol definido
     else:
         formulario = EleccionRol(request.POST)
@@ -151,7 +156,10 @@ def solicitar_acceso(request):
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def seguimiento(request):
-    context = {'solic_jefaturas': SolicitudJefatura.objects.all(), 'solic_aperturas': SolicitudApertura.objects.all()}
+    context = {'divisiones': Division.objects.all(),
+               'solic_jefaturas': SolicitudJefatura.objects.all(),
+               'solic_aperturas': SolicitudApertura.objects.all(),
+               }
     return render(request, 'seguimiento.html', context)
 
 
@@ -193,8 +201,18 @@ def capacitarse(request):
 
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
-def divisiones(request):
-    return None
+def divisiones(request, pk):
+    division = Division.objects.get(id=pk)
+    brigada = AsignacionBrigada.objects.filter(division=division)
+    brigadistas = UsuarioBase.objects.filter(rol='BR')
+    brigadistas_disp = []
+    for brigadista in brigadistas:
+        if brigadista.usuario.groups.all()[0].name != 'Brigada':
+            brigadistas_disp.append(brigadista.usuario)
+
+    context = {'division': division, 'brigada': brigada, 'brigadistas_disp': brigadistas_disp}
+
+    return render(request, 'divisiones.html', context)
 
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
@@ -214,6 +232,7 @@ def aceptar_jefatura(request, pk):
     return render(request, 'aceptar-jefatura.html')
 
 
+@usuarios_admitidos(roles_admitidos=['Comisión'])
 def aceptar_apertura(request, pk):
     solicitud = SolicitudApertura.objects.get(id=pk)
 
@@ -232,6 +251,8 @@ def aceptar_apertura(request, pk):
 
     return redirect(seguimiento)
 
+
+@usuarios_admitidos(roles_admitidos=['Comisión'])
 def aceptar_turno(request, pk):
     solicitud = SolicitudTurno.objects.get(id=pk)
 
@@ -246,3 +267,27 @@ def aceptar_turno(request, pk):
     solicitud.delete()
 
     return redirect(administrar_area)
+
+
+@usuarios_admitidos(roles_admitidos=['Comisión'])
+def asignar_brigadista(request, usuario, division):
+    brigadista = User.objects.get(id=usuario)
+    divisi_asig = Division.objects.get(id=division)
+
+    nueva_asignacion = AsignacionBrigada.objects.create(division=divisi_asig, usuario=brigadista)
+    nueva_asignacion.save()
+    brigadista.groups.add(Group.objects.get(name="Brigada"))
+    brigadista.groups.remove(Group.objects.get(name="Capacitados"))
+
+    return redirect(divisiones, divisi_asig.id)
+
+@usuarios_admitidos(roles_admitidos=['Comisión'])
+def desasignar_brigadista(request, usuario, division):
+    print(usuario)
+    brigadista = User.objects.get(id=usuario)
+    asignacion = AsignacionBrigada.objects.get(usuario=brigadista)
+    asignacion.delete()
+    brigadista.groups.remove(Group.objects.get(name="Brigada"))
+    brigadista.groups.add(Group.objects.get(name="Capacitados"))
+
+    return redirect(divisiones, division)
