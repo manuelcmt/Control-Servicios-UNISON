@@ -53,6 +53,9 @@ class AsignacionBrigada(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     division = models.ForeignKey('Division', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.division.nombre + ' - ' + self.usuario.username
+
 
 # Químico activo para recibir información y enviar resultados
 class QuimicoActivo(models.Model):
@@ -64,11 +67,17 @@ class ResponsabilidadArea(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     area_trabajo = models.ForeignKey('AreaTrabajo', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.area_trabajo
+
 
 # Vinculación con un departamento específico
 class JefaturaDepartamento(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     departamento = models.ForeignKey('Departamento', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.departamento
 
 
 # Información sobre el turno actual
@@ -76,6 +85,9 @@ class TurnoAsignado(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     area_trabajo = models.ForeignKey('AreaTrabajo', on_delete=models.CASCADE)
     # horario
+
+    def __str__(self):
+        return self.usuario
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -139,6 +151,7 @@ class SolicitudJefatura(models.Model):
 class SolicitudApertura(models.Model):
     responsable = models.ForeignKey(User, on_delete=models.CASCADE)
     area_solici = models.ForeignKey(AreaTrabajo, on_delete=models.CASCADE)
+
 
 
 class SolicitudTurno(models.Model):

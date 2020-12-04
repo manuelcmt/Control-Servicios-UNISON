@@ -5,6 +5,71 @@
     <title>Title</title>
 </head>
 <body>
+    <h2>Vista de división: {{ division }}</h2>
+    <h3>Brigada asignada</h3>
+    <table>
+        <tr>
+            <td>Número de empleado</td>
+            <td>Nombre</td>
+            <td>Apellidos</td>
+            <td>Acciones</td>
+        </tr>
+        {% for brigadista in brigada %}
+            <tr>
+                <td>{{ brigadista.usuario.username }}</td>
+                <td>{{ brigadista.usuario.first_name }}</td>
+                <td>{{ brigadista.usuario.last_name }}</td>
+                <td><a href="{% url 'desasignar-brigadista' brigadista.usuario.id division.id %}">Desasignar</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Brigadistas disponibles</h3>
+    <table>
+        <tr>
+            <td>Número de empleado</td>
+            <td>Nombre</td>
+            <td>Apellidos</td>
+            <td>Acciones</td>
+        </tr>
+        {% for brigadista in brigadistas_disp %}
+            <tr>
+                <td>{{ brigadista }}</td>
+                <td>{{ brigadista.first_name }}</td>
+                <td>{{ brigadista.last_name }}</td>
+                <td><a href="{% url 'asignar-brigadista' brigadista.id division.id %}">Asignar</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+    <h3>Areas registradas</h3>
+    {% for departamento in division.departamento_set.all %}
+        <h4>{{ departamento }}</h4>
+        <table>
+            <tr>
+            <td>Area</td>
+            <td>Direccion</td>
+            <td>Espacio (m²)</td>
+            <td>Capacidad</td>
+            <td>Estado</td>
+        </tr>
+
+        {% for area in departamento.areatrabajo_set.all %}
+            <tr>
+                <td>{{ area.nombre }}</td>
+                <td>{{ area.direccion }}</td>
+                <td>{{ area.espacio_m2 }}</td>
+                <td>{{ area.capacidad }}</td>
+                {% if area.autorizada %}
+                <td>Autorizada</td>
+                {% else %}
+                <td>No autorizada</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </table>
+    {% endfor %}
 
 
 </body>

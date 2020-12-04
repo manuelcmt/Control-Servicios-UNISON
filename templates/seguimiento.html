@@ -5,6 +5,12 @@
     <title>Title</title>
 </head>
 <body>
+    <ul>
+        {% for division in divisiones %}
+            <li><a href="{% url 'divisiones' division.id %}">{{ division }}</a></li>
+        {% endfor %}
+
+    </ul>
     <table>
         <h2>Solicitudes de apertura de departamentos</h2>
         <tr>
