@@ -41,6 +41,7 @@ def inicio(request):
 
     return redirect(incumbencia)
 
+
 @para_no_autenticados
 def registrarse(request):
     formulario = FormularioRegistro(request.POST)
@@ -95,7 +96,6 @@ def brigada(request):
             if area.autorizada:
                 areas.append(area)
 
-
     context = {'division': division, 'areas': areas}
     return render(request, 'brigada.html', context)
 
@@ -108,33 +108,34 @@ def inspeccion_sanitaria(request, pk):
 
     if request.method == 'POST':
         if formulario.is_valid():
-            riesgo = 0
-            if  not formulario.cleaned_data['limite_usuarios']:
-                riesgo += 1
+            puntos_riesgo = 0
+            if not formulario.cleaned_data['limite_usuarios']:
+                puntos_riesgo += 1
             if not formulario.cleaned_data['higiene']:
-                riesgo += 1
+                puntos_riesgo += 1
             if not formulario.cleaned_data['gel_antibacterial']:
-                riesgo += 1
+                puntos_riesgo += 1
             if not formulario.cleaned_data['sanitizante']:
-                riesgo += 1
+                puntos_riesgo += 1
             if not formulario.cleaned_data['tapete']:
-                riesgo += 1
+                puntos_riesgo += 1
             if not formulario.cleaned_data['cubrebocas']:
-                riesgo += 1
+                puntos_riesgo += 1
 
-            if riesgo != 0 or formulario.cleaned_data['comentarios'] != '':
-                inspeccion = InspeccionSanitaria.objects.create(limite_usuarios=formulario.cleaned_data['limite_usuarios'],
-                                                   higiene=formulario.cleaned_data['higiene'],
-                                                   gel_antibacterial=formulario.cleaned_data['gel_antibacterial'],
-                                                   sanitizante=formulario.cleaned_data['sanitizante'],
-                                                   tapete=formulario.cleaned_data['tapete'],
-                                                   cubrebocas=formulario.cleaned_data['cubrebocas'],
-                                                   comentarios=formulario.cleaned_data['comentarios'],
-                                                   brigadista=inspector,
-                                                   area_revisada=area,
-                                                   fecha=datetime.now(),
-                                                   riesgo=riesgo
-                                                   )
+            if puntos_riesgo != 0 or formulario.cleaned_data['comentarios'] != '':
+                inspeccion = InspeccionSanitaria.objects.create(
+                    limite_usuarios=formulario.cleaned_data['limite_usuarios'],
+                    higiene=formulario.cleaned_data['higiene'],
+                    gel_antibacterial=formulario.cleaned_data['gel_antibacterial'],
+                    sanitizante=formulario.cleaned_data['sanitizante'],
+                    tapete=formulario.cleaned_data['tapete'],
+                    cubrebocas=formulario.cleaned_data['cubrebocas'],
+                    comentarios=formulario.cleaned_data['comentarios'],
+                    brigadista=inspector,
+                    area_revisada=area,
+                    fecha=datetime.now(),
+                    riesgo=puntos_riesgo
+                    )
 
                 inspeccion.save()
             area.ultima_rev = datetime.now()
@@ -152,11 +153,21 @@ def registro_departamento(request):
 
     if request.method == 'POST':
         if formulario.is_valid():
-            nueva_area = AreaTrabajo.objects.create(nombre=formulario.cleaned_data['nombre'], departamento=departamento, direccion=formulario.cleaned_data['direccion'], espacio_m2=formulario.cleaned_data['espacio_m2'], capacidad=formulario.cleaned_data['espacio_m2']/1.8)
+            capacidad = 0
+            if formulario.cleaned_data['espacio_m2'] < 9:
+                capacidad = 1
+            else:
+                capacidad = formulario.cleaned_data['espacio_m2'] / 1.8
+
+            nueva_area = AreaTrabajo.objects.create(nombre=formulario.cleaned_data['nombre'], departamento=departamento,
+                                                    direccion=formulario.cleaned_data['direccion'],
+                                                    espacio_m2=formulario.cleaned_data['espacio_m2'],
+                                                    capacidad=capacidad)
             nueva_area.save()
             return redirect('registro-departamento')
 
-    context = {'nombre_depto': departamento.nombre, 'division': departamento.division.nombre, 'areas': departamento.areatrabajo_set.all(), 'formulario': formulario}
+    context = {'nombre_depto': departamento.nombre, 'division': departamento.division.nombre,
+               'areas': departamento.areatrabajo_set.all(), 'formulario': formulario}
     return render(request, 'registro-departamento.html', context)
 
 
@@ -172,7 +183,9 @@ def solicitar_acceso(request):
         formulario = SolicitarJefatura(request.POST)
         if request.method == 'POST':
             if formulario.is_valid():
-                nueva_jefatura = SolicitudJefatura.objects.create(jefe=request.user, division=formulario.cleaned_data['division'], nombre_depto=formulario.cleaned_data['nombre_depto'])
+                nueva_jefatura = SolicitudJefatura.objects.create(jefe=request.user,
+                                                                  division=formulario.cleaned_data['division'],
+                                                                  nombre_depto=formulario.cleaned_data['nombre_depto'])
                 nueva_jefatura.save()
                 return redirect('inicio')
 
@@ -181,7 +194,9 @@ def solicitar_acceso(request):
         formulario = SolicitarApertura(request.POST)
         if request.method == 'POST':
             if formulario.is_valid():
-                nueva_responsabilidad = SolicitudApertura.objects.create(responsable=request.user, area_solici=formulario.cleaned_data['area_solici'])
+                nueva_responsabilidad = SolicitudApertura.objects.create(responsable=request.user,
+                                                                         area_solici=formulario.cleaned_data[
+                                                                             'area_solici'])
                 nueva_responsabilidad.save()
                 return redirect('inicio')
 
@@ -190,7 +205,8 @@ def solicitar_acceso(request):
         formulario = SolicitarTurno(request.POST)
         if request.method == 'POST':
             if formulario.is_valid():
-                nuevo_turno = SolicitudTurno.objects.create(usuario=request.user, area_solici=formulario.cleaned_data['area_solici'])
+                nuevo_turno = SolicitudTurno.objects.create(usuario=request.user,
+                                                            area_solici=formulario.cleaned_data['area_solici'])
                 nuevo_turno.save()
                 return redirect('inicio')
 
@@ -208,8 +224,7 @@ def solicitar_acceso(request):
                 request.user.usuariobase.save()
                 return redirect('solicitar-acceso')
 
-
-    return render(request, 'solicitar-acceso.html', {'formulario':formulario})
+    return render(request, 'solicitar-acceso.html', {'formulario': formulario})
 
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
@@ -244,12 +259,30 @@ def responder_fsi_02(request):
 
 @usuarios_admitidos(roles_admitidos=['Entrenamiento'])
 def responder_fsi_04(request):
-    return None
+    formulario = Fsi_04(request.POST)
+    puntaje = 0
+    if request.method == 'POST':
+        if formulario.is_valid():
+            for respuesta in formulario:
+                puntaje += respuesta
+
+            if puntaje >= 80:
+                request.user.usuariobase.fsi_04 = True
+                request.user.usuariobase.save()
+                messages.success(request, 'Ha completado el formato FSI-04.')
+
+            else:
+                messages.info(request, 'Lamentablemente, no cumple con los requisitos para volver en esta etapa.')
+
+            return redirect('capacitarse')
+
+    context = {'formulario': formulario}
+    return render(request, 'responder-FSI-04.html', context)
 
 
 @usuarios_admitidos(roles_admitidos=['Entrenamiento'])
 def capacitarse(request):
-    if request.user.usuariobase.fsi_02:
+    if request.user.usuariobase.fsi_02 and request.user.usuariobase.fsi_04:
         grupo = Group.objects.get(name='Entrenamiento')
         request.user.groups.remove(grupo)
         grupo = Group.objects.get(name='Capacitados')
@@ -295,7 +328,8 @@ def aceptar_jefatura(request, pk):
 def aceptar_apertura(request, pk):
     solicitud = SolicitudApertura.objects.get(id=pk)
 
-    nueva_responsabilidad = ResponsabilidadArea.objects.create(usuario=solicitud.responsable, area_trabajo=solicitud.area_solici)
+    nueva_responsabilidad = ResponsabilidadArea.objects.create(usuario=solicitud.responsable,
+                                                               area_trabajo=solicitud.area_solici)
     nueva_responsabilidad.save()
 
     solicitud.responsable.groups.add(Group.objects.get(name='Responsables'))
@@ -351,6 +385,7 @@ def revocar_turno(request, pk):
 
     return redirect(administrar_area)
 
+
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def asignar_brigadista(request, usuario, division):
     brigadista = User.objects.get(id=usuario)
@@ -362,6 +397,7 @@ def asignar_brigadista(request, usuario, division):
     brigadista.groups.remove(Group.objects.get(name="Capacitados"))
 
     return redirect(divisiones, divisi_asig.id)
+
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
 def desasignar_brigadista(request, usuario, division):

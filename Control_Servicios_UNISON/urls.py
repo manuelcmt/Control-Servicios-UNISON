@@ -8,7 +8,7 @@ urlpatterns = [
     path('iniciar-sesion/', views.iniciar_sesion, name="iniciar-sesion"),
     path('cerrar-sesion/', views.cerrar_sesion, name="cerrar-sesion"),
     path('capacitarse/responder-FSI-02/', views.responder_fsi_02, name="responder-FSI-02"),
-    path('responder-FSI-04/', views.responder_fsi_04, name="responder-FSI-04"),
+    path('capacitarse/responder-FSI-04/', views.responder_fsi_04, name="responder-FSI-04"),
     path('capacitarse/', views.capacitarse, name="capacitarse"),
 
     # Usuario que reserva turnos

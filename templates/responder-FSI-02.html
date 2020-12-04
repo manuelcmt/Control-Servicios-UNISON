@@ -7,54 +7,12 @@
 <body>
     <form action="" method="post">
         {% csrf_token %}
-        <div class="pregresp">
-        <div class="pregunta1">1. Presento enfermedades crónicas-degenerativas o problemas de salud que afecten al sistema inmunológico<br />
-        </div>
-            <div class="respuestas">
-                <input type="radio" name="preg1" value="1" /> Sí<br />
-                <input type="radio" name="preg1" value="2" /> No<br />
-            </div>
-            <br>
-            <div class="pregunta2">2.Estoy embarazada o en período de lactancia<br />
-            </div>
-                <div class="respuestas">
-                    <input type="radio" name="preg2" value="1" /> Sí<br />
-                    <input type="radio" name="preg2" value="2" /> No<br />
-                    <input type="radio" name="preg2" value="3" /> No aplica<br />
-                </div>
-            <br>
-            <div class="pregunta3">3.Tengo o he tenido, durante los últimos 15 días, algún síntoma que pudiera ser indicativo de COVID-19<br />
-            </div>
-                <div class="respuestas">
-                    <input type="radio" name="preg3" value="1" /> Sí<br />
-                    <input type="radio" name="preg3" value="2" /> No<br />
-                </div>
-            <br>
-            <div class="pregunta4">4.Tengo o he tenido, durante los últimos 15 días, contacto directo o indirecto, con alguna persona que haya sido diagnosticada con COVID-19, en mi domicilio o lugar de trabajo<br />
-            </div>
-                <div class="respuestas">
-                    <input type="radio" name="preg4" value="1" /> Sí<br />
-                    <input type="radio" name="preg4" value="2" /> No<br />
-                </div>
-            <br>
-            <div class="pregunta5">5.Utilizaré el transporte público para asistir a las instalaciones de la Universidad<br />
-            </div>
-                <div class="respuestas">
-                    <input type="radio" name="preg5" value="1" /> Sí<br />
-                    <input type="radio" name="preg5" value="2" /> No<br />
-                </div>
-            <br>
-            <div class="pregunta6">6.Me comprometo a seguir las instrucciones de las autoridades sanitarias en el sentido de no asistir a reuniones, eventos, etc y respetar la medida de "Quédate en casa" en mi vida privada<br />
-            </div>
-                <div class="respuestas">
-                    <input type="radio" name="preg6" value="1" /> Sí<br />
-                    <input type="radio" name="preg6" value="2" /> No<br />
-                </div>
-            <br>
-
-        </div>
-
-        {{ formulario }}
+        <p>1. Presento enfermedades crónicas-degenerativas o problemas de salud que afecten al sistema inmunológico: {{ formulario.res1 }}</p>
+        <p>2.Estoy embarazada o en período de lactancia: {{ formulario.res2 }}</p>
+        <p>3.Tengo o he tenido, durante los últimos 15 días, algún síntoma que pudiera ser indicativo de COVID-19: {{ formulario.res3 }}</p>
+        <p>4.Tengo o he tenido, durante los últimos 15 días, contacto directo o indirecto, con alguna persona que haya sido diagnosticada con COVID-19, en mi domicilio o lugar de trabajo: {{ formulario.res4 }}</p>
+        <p>5.Utilizaré el transporte público para asistir a las instalaciones de la Universidad: {{ formulario.res5 }}</p>
+        <p>6.Me comprometo a seguir las instrucciones de las autoridades sanitarias en el sentido de no asistir a reuniones, eventos, etc y respetar la medida de "Quédate en casa" en mi vida privada: {{ formulario.res6 }}</p>
 
         <input type="submit" name="Enviar">
 

@@ -5,6 +5,12 @@
     <title>Capacitación para ingresar</title>
 </head>
 <body>
+    {% if not request.user.fsi_02 %}
     <a href='responder-FSI-02'>Formulario FSI-02</a>
+    {% endif %}
+
+    {% if not request.user.fsi_04 %}
+    <a href='responder-FSI-04'>Formulario FSI-04</a>
+    {% endif %}
 </body>
 </html>
