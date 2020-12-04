@@ -1,12 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends '_main.html' %}
+
+{% block title %}
+
     <meta charset="UTF-8">
-    <title>Sistema de Control de Servicios para Investigaciones UNISON COVID-19</title>
-</head>
-<body>
+    <title> Inicio </title>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="mx-auto" style="width: 1000px;">
+
     {% for message in messages %}
         <p>{{ message }}</p>
     {% endfor %}
-</body>
-</html>
+
+    </div>
+
+{% endblock %}

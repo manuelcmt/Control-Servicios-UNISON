@@ -1,32 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends '_main.html' %}
+
+{% block title %}
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <form method="post" action="">
-        {% csrf_token %}
-        {% if request.user.usuariobase.rol == 'JD' %}
-            <h2>Registro de jefe de departamento</h2>
-            <p>División: {{ formulario.division }}</p>
-            <p>Nombre de departamento: {{ formulario.nombre_depto }}</p>
+    <title> Solicitar acceso </title>
 
-        {% elif request.user.usuariobase.rol == 'RA' %}
-            <h2>Solicitud de apertura de área</h2>
-            <p>Area solicitada: {{ formulario.area_solici }}</p>
+{% endblock %}
 
-        {% elif request.user.usuariobase.rol == 'IN' or request.user.usuariobase.rol == 'AL' or request.user.usuariobase.rol == 'EM' %}
-            <h2>Solicitud de acceso a un área</h2>
-            <p>Area solicitada: {{ formulario.area_solici }}</p>
+{% block content %}
+
+    <div class="mx-auto" style="width: 1000px;">
+
+        <form method="post" action="">
+            {% csrf_token %}
+            {% if request.user.usuariobase.rol == 'JD' %}
+                <h2>Registro de jefe de departamento</h2>
+                <p>División: {{ formulario.division }}</p>
+                <p>Nombre de departamento: {{ formulario.nombre_depto }}</p>
+
+            {% elif request.user.usuariobase.rol == 'RA' %}
+                <h2>Solicitud de apertura de área</h2>
+                <p>Area solicitada: {{ formulario.area_solici }}</p>
+
+            {% elif request.user.usuariobase.rol == 'IN' or request.user.usuariobase.rol == 'AL' or request.user.usuariobase.rol == 'EM' %}
+                <h2>Solicitud de acceso a un área</h2>
+                <p>Area solicitada: {{ formulario.area_solici }}</p>
 
 
-        {% else %}
-            <p>Seleccione su tipo de usuario: {{ formulario.rol }}</p>
+            {% else %}
+                <p>Seleccione su tipo de usuario: {{ formulario.rol }}</p>
 
-        {% endif %}
+            {% endif %}
 
-        <input type="submit" name="Solicitar" value="Solicitar">
-    </form>
-</body>
-</html>
+            <input type="submit" class="btn btn-primary" name="Solicitar" value="Solicitar">
+        </form>
+
+    </div>
+
+{% endblock %}

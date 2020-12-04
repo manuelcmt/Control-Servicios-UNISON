@@ -1,22 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends '_main.html' %}
+
+{% block title %}
+
     <meta charset="UTF-8">
-    <title>Registro de usuarios</title>
-</head>
-<body>
-    <form method="post" action="">
-        {% csrf_token %}
-        <p>Apellidos: {{ formulario.last_name }}</p>
-        <p>Nombres: {{ formulario.first_name }}</p>
-        <p>Número de empleado/expediente: {{ formulario.username }}</p>
-        <p>Correo electrónico: {{ formulario.email }}</p>
-        <p>Contraseña: {{ formulario.password1 }}</p>
-        <p>Confirme la contraseña: {{ formulario.password2 }}</p>
+    <title> Registro de usuarios </title>
 
-        <input type="submit" name="Crear Usuario">
-    </form>
+{% endblock %}
 
-    <p>¿Ya estás registrado? <a href="{% url 'iniciar-sesion' %}">Inicia sesión</a></p>
-</body>
-</html>
+{% block content %}
+
+    <h2 class="row justify-content-md-center"> Registrarse </h2>
+
+        <br><br>
+
+        <div class="row justify-content-md-center">
+
+            <form method="post" action="">
+
+                {% csrf_token %}
+                <p>Apellidos: {{ formulario.last_name }}</p>
+                <p>Nombres: {{ formulario.first_name }}</p>
+                <p>Número de empleado/expediente: {{ formulario.username }}</p>
+                <p>Correo electrónico: {{ formulario.email }}</p>
+                <p>Contraseña: {{ formulario.password1 }}</p>
+                <p>Confirme la contraseña: {{ formulario.password2 }}</p>
+
+                <p>¿Ya estás registrado?<a href="{% url 'iniciar-sesion' %}">Inicia sesión</a></p>
+
+                <input type="submit" class="btn btn-primary" name="Crear Usuario">
+
+            </form>
+
+        </div>
+
+{% endblock %}

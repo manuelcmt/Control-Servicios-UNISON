@@ -1,24 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends '_main.html' %}
+
+{% block title %}
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h2>Inspección sanitaria: {{ area }}</h2>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <p>¿Se respeta el número de usuarios registrados? ({{ area.turnoasignado_set.count }}, más responsable) {{ formulario.limite_usuarios }}</p>
-        <p>¿El área presenta buena higiene? {{ formulario.higiene }}</p>
-        <p>¿Hay disponible gel antibacterial? {{ formulario.gel_antibacterial }}</p>
-        <p>¿Hay disponible sanitizante? {{ formulario.sanitizante }}</p>
-        <p>¿El área cuenta con tapete desinfectante en la entrada? {{ formulario.tapete }}</p>
-        <p>¿Todos los presentes portan cubrebocas? {{ formulario.cubrebocas }}</p>
+    <title> Registro de usuarios </title>
 
-        <p>Comentarios adicionales:</p>
-        <div>{{ formulario.comentarios }}</div>
+{% endblock %}
 
-        <input type="submit" name="Enviar">
-    </form>
-</body>
-</html>
+{% block content %}
+
+    <div class="mx-auto" style="width: 1000px;">
+
+        <h4>Inspección sanitaria: {{ area }}</h4>
+        <br>
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            <p>¿Se respeta el número de usuarios registrados? ({{ area.turnoasignado_set.count }}, más responsable) {{ formulario.limite_usuarios }}</p>
+            <p>¿El área presenta buena higiene? {{ formulario.higiene }}</p>
+            <p>¿Hay disponible gel antibacterial? {{ formulario.gel_antibacterial }}</p>
+            <p>¿Hay disponible sanitizante? {{ formulario.sanitizante }}</p>
+            <p>¿El área cuenta con tapete desinfectante en la entrada? {{ formulario.tapete }}</p>
+            <p>¿Todos los presentes portan cubrebocas? {{ formulario.cubrebocas }}</p>
+
+            <p>Comentarios adicionales:</p>
+            <div>{{ formulario.comentarios }}</div>
+
+            <input type="submit" name="Enviar">
+        </form>
+
+    </div>
+
+{% endblock %}

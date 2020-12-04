@@ -1,23 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends '_main.html' %}
+
+{% block title %}
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h2>División: {{ division }}<br> Departamento de {{ nombre_depto }}</h2>
+    <title> Registro de departamento </title>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="mx-auto" style="width: 1000px;">
+
+    <h4>División: {{ division }}<br> Departamento de {{ nombre_depto }}</h4>
+    <br>
+
     <form method="post">
         {% csrf_token %}
-        <h3>Registro de áreas</h3>
+        <h5>Registro de áreas</h5>
         <p>Nombre: {{ formulario.nombre }}</p>
         <p>Dirección: {{ formulario.direccion }}</p>
         <p>Espacio (m²): {{ formulario.espacio_m2 }}</p>
 
-        <input type="submit" name="Registrar" value="Registrar">
+        <input type="submit" class="btn btn-primary" name="Registrar" value="Registrar">
     </form>
+    <br>
 
-    <h3>Áreas registradas</h3>
-    <table>
+    <h5>Áreas registradas</h5>
+    <table class="table table table-striped;">
         <tr>
             <td>Area</td>
             <td>Direccion</td>
@@ -35,5 +44,7 @@
         {% endfor %}
 
     </table>
-</body>
-</html>
+
+    </div>
+
+{% endblock %}

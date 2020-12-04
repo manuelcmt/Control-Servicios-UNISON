@@ -1,31 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends '_main.html' %}
+
+{% block title %}
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h2>Inspección de salubridad, {{ division }}</h2>
+    <title> Brigada </title>
 
-    <h3>Áreas para revisión:</h3>
-    <table>
-        <tr>
-            <td>Área</td>
-            <td>Dirección</td>
-            <td>Última revisión</td>
-            <td>Acciones</td>
-        </tr>
-        {% for area in areas %}
-            <tr>
-            <td>{{ area }}</td>
-            <td>{{ area.direccion }}</td>
-            <td>{{ area.ultima_rev }}</td>
+{% endblock %}
 
-            <td><a href="{% url 'inspeccion-sanitaria' area.id %}">Registrar visita</a></td>
-            </tr>
-        {% endfor %}
+{% block content %}
 
-    </table>
+    <div class="mx-auto" style="width: 1000px;">
 
-</body>
-</html>
+    <h4>Inspección de salubridad: {{ division }}</h4>
+        <br>
+        <h5>Áreas para revisión</h5>
+
+            <table class="table table table-striped; mx-auto" style="width: 1050px;">
+              <thead>
+                <tr>
+                  <th scope="col">Área</th>
+                  <th scope="col">Dirección</th>
+                  <th scope="col">Última revisión</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                    <tr>
+                        {% for area in areas %}
+                            <tr>
+                                <td>{{ area }}</td>
+                                <td>{{ area.direccion }}</td>
+                                <td>{{ area.ultima_rev }}</td>
+
+                                <td><a href="{% url 'inspeccion-sanitaria' area.id %}">Registrar visita</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+              </tbody>
+            </table>
+            <br><br>
+
+
+    </div>
+
+{% endblock %}

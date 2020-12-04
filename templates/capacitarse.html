@@ -1,17 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Capacitación para ingresar</title>
-</head>
-<body>
-    <h2>Tus capacitaciones pendientes</h2>
-    {% if fsi_02 == False %}
-        <p><a href='responder-FSI-02'>Formulario FSI-02</a></p>
-    {% endif %}
+{% extends '_main.html' %}
 
-    {% if fsi_04 == False %}
-        <p><a href='responder-FSI-04'>Formulario FSI-04</a></p>
-    {% endif %}
-</body>
-</html>
+{% block title %}
+
+    <meta charset="UTF-8">
+    <title> Capacitarse </title>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="mx-auto" style="width: 1000px;">
+
+        <h4>Capacitaciones</h4>
+
+        <ul class="list-group list-group-flush;">
+            {% for division in divisiones %}
+                <li class="list-group-item"><a href="{% url 'divisiones' division.id %}">{{ division }}</a></li>
+            {% endfor %}
+
+            {% if fsi_02 == False %}
+                <li class="list-group-item"><a href="{% url 'responder-FSI-02'%}">Formulario FSI-02</a></li>
+            {% endif %}
+
+            {% if fsi_04 == False %}
+                <li class="list-group-item"><a href="{% url 'responder-FSI-04'%}">Formulario FSI-04</a></li>
+            {% endif %}
+
+        </ul>
+
+    </div>
+
+{% endblock %}

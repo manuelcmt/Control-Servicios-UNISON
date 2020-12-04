@@ -1,14 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends '_main.html' %}
+
+{% block title %}
+
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h2>Área: {{ area }}</h2>
+    <title> Administrar áreas </title>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="mx-auto" style="width: 1000px;">
+
+    <h5>Área: {{ area }}</h5><br>
     <p>Máximo de ocupantes: {{ area.capacidad }}</p>
     <p>Ocupantes actuales: {{ area.turnoasignado_set.count }}</p>
-    <table>
+    <br><br>
+
+    <table class="table table table-striped;">
         <h2>Solicitudes de acceso a tu área</h2>
         <tr>
             <td>Número de empleado/expediente</td>
@@ -25,10 +33,9 @@
                 <td><a href="{% url 'aceptar-turno' solicitud.id %}">Aprobar</a></td>
             </tr>
         {% endfor %}
-
     </table>
 
-    <table>
+    <table class="table table table-striped;">
         <h2>Tus compañeros</h2>
         <tr>
             <td>Número de empleado/expediente</td>
@@ -47,5 +54,7 @@
         {% endfor %}
 
     </table>
-</body>
-</html>
+
+    </div>
+
+{% endblock %}

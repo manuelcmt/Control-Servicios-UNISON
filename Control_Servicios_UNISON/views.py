@@ -135,7 +135,7 @@ def inspeccion_sanitaria(request, pk):
                     area_revisada=area,
                     fecha=datetime.now(),
                     riesgo=puntos_riesgo
-                    )
+                )
 
                 inspeccion.save()
             area.ultima_rev = datetime.now()
@@ -276,7 +276,6 @@ def responder_fsi_04(request):
 
             return redirect('capacitarse')
 
-
     context = {'formulario': formulario}
     return render(request, 'responder-FSI-04.html', context)
 
@@ -290,7 +289,8 @@ def capacitarse(request):
         request.user.groups.add(grupo)
         return redirect('solicitar-acceso')
 
-    return render(request, 'capacitarse.html', {'fsi_02': request.user.usuariobase.fsi_02, 'fsi_04': request.user.usuariobase.fsi_04 })
+    return render(request, 'capacitarse.html',
+                  {'fsi_02': request.user.usuariobase.fsi_02, 'fsi_04': request.user.usuariobase.fsi_04})
 
 
 @usuarios_admitidos(roles_admitidos=['Comisión'])
